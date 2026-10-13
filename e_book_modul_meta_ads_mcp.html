@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul Ebook Lengkap: Meta Ads & API Automation</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        meta: '#0668E1',
+                        ai: '#10B981',
+                        dark: '#0F172A',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { scroll-behavior: smooth; }
+        .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        .gradient-text { background: linear-gradient(to right, #0668E1, #8B5CF6); -webkit-background-clip: text; color: transparent; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Checkbox styling */
+        .check-container input:checked + div { background-color: #10B981; border-color: #10B981; }
+        .check-container input:checked + div svg { opacity: 1; }
+        .check-container input:checked ~ span { text-decoration: line-through; color: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 z-50 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-2xl flex items-center gap-3">
+        <i class="fas fa-check-circle text-green-400"></i>
+        <span id="toast-msg">Berjaya disalin!</span>
+    </div>
+
+    <div class="flex flex-col lg:flex-row min-h-screen">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="hidden lg:block w-80 fixed h-screen overflow-y-auto bg-white border-r border-slate-200 shadow-sm z-40 p-6">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-meta to-violet-600 flex items-center justify-center text-white shadow-lg">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h2 class="font-bold text-lg leading-tight text-slate-900">syahmiaof<br><span class="text-xs text-slate-500 font-normal">Modul Automasi</span></h2>
+            </div>
+            
+            <nav class="space-y-1" id="toc">
+                <!-- Links will be populated by JS for active state tracking, hardcoded for reliability here -->
+                <a href="#prakata" class="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-meta rounded-lg transition-colors font-medium"><i class="fas fa-info-circle w-5"></i> Prakata</a>
+                <a href="#bab1" class="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-meta rounded-lg transition-colors font-medium"><i class="fas fa-book w-5"></i> Bab 1: Kamus Istilah</a>
+                <a href="#bab2" class="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-meta rounded-lg transition-colors font-medium"><i class="fab fa-facebook w-5"></i> Bab 2: Bina Facebook Page</a>
+                <a href="#bab3" class="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-meta rounded-lg transition-colors font-medium"><i class="fas fa-briefcase w-5"></i> Bab 3: Business Suite & Ads</a>
+                <a href="#bab4" class="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-meta rounded-lg transition-colors font-medium"><i class="fas fa-code w-5"></i> Bab 4: Daftar Developer App</a>
+                <a href="#bab5" class="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-meta rounded-lg transition-colors font-medium"><i class="fas fa-key w-5"></i> Bab 5: System User & Token</a>
+                <a href="#bab6" class="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-meta rounded-lg transition-colors font-medium"><i class="fas fa-vial w-5"></i> Bab 6: Uji Token (API)</a>
+                <a href="#bab7" class="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-meta rounded-lg transition-colors font-medium"><i class="fas fa-wpforms w-5"></i> Bab 7: Instant Form ID</a>
+                <a href="#bab8" class="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-meta rounded-lg transition-colors font-medium"><i class="fas fa-file-code w-5"></i> Bab 8: Susun Fail .env</a>
+                <a href="#bab9" class="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-meta rounded-lg transition-colors font-medium"><i class="fas fa-robot w-5"></i> Bab 9: Integrasi AI & MCP</a>
+                <a href="#bab10" class="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-meta rounded-lg transition-colors font-medium"><i class="fas fa-bug w-5"></i> Bab 10: Selesaikan Error</a>
+                <a href="#checklist" class="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-meta rounded-lg transition-colors font-medium"><i class="fas fa-check-square w-5"></i> Senarai Semak Akhir</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 lg:ml-80">
+            
+            <!-- Mobile Header (Sticky) -->
+            <header class="lg:hidden glass-nav sticky top-0 z-40 border-b border-slate-200 p-4 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-meta to-violet-600 flex items-center justify-center text-white">
+                        <i class="fas fa-book-open text-sm"></i>
+                    </div>
+                    <h1 class="font-bold text-slate-900 text-sm">Modul Automasi Meta</h1>
+                </div>
+                <a href="#toc-mobile" class="text-slate-600"><i class="fas fa-bars text-xl"></i></a>
+            </header>
+
+            <div class="max-w-4xl mx-auto p-6 md:p-12 space-y-16">
+                
+                <!-- Hero Section -->
+                <section class="text-center pt-8 pb-12 border-b border-slate-200">
+                    <span class="inline-block py-1 px-3 rounded-full bg-violet-100 text-violet-700 text-xs font-bold tracking-widest uppercase mb-6 shadow-sm border border-violet-200">
+                        Edisi Terkini 2026
+                    </span>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight mb-6">
+                        Panduan <span class="gradient-text">Meta Ads & API</span> Automation Dari Sifar
+                    </h1>
+                    <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
+                        "Dari Butang Klik Hingga Token Kekal & Integrasi AI Agent Melalui MCP: Panduan Praktikal Untuk Orang Bukan Teknikal"
+                    </p>
+                </section>
+
+                <!-- Prakata -->
+                <section id="prakata" class="scroll-mt-24">
+                    <div class="bg-gradient-to-br from-white to-blue-50 p-8 rounded-3xl shadow-xl border border-blue-100 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-meta opacity-10 rounded-full blur-2xl"></div>
+                        <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                            <i class="fas fa-book-reader text-meta"></i> Prakata & Cara Guna Ebook Ini
+                        </h2>
+                        <p class="text-slate-700 mb-4 leading-relaxed">
+                            Modul ini ditulis khas untuk usahawan, pelajar, dan sesiapa sahaja yang tiada latar belakang pengaturcaraan (<i class="text-meta font-medium">non-technical</i>).
+                        </p>
+                        <p class="text-slate-700 mb-6 leading-relaxed">
+                            Banyak tutorial di internet terlalu teknikal dan mengelirukan — menggunakan istilah seperti endpoint, OAuth, payload, webhook tanpa menerangkan di mana letaknya butang sebenar di skrin.
+                        </p>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                            <h3 class="font-semibold text-slate-800 mb-4">Dalam modul ini, anda akan dipimpin langkah demi langkah (click-by-click):</h3>
+                            <ul class="space-y-3">
+                                <li class="flex items-start gap-3 text-slate-700"><i class="fas fa-mouse-pointer text-violet-500 mt-1"></i> Di mana nak klik tetikus anda di portal Meta.</li>
+                                <li class="flex items-start gap-3 text-slate-700"><i class="fas fa-palette text-violet-500 mt-1"></i> Warna dan nama butang yang perlu ditekan.</li>
+                                <li class="flex items-start gap-3 text-slate-700"><i class="fas fa-question-circle text-violet-500 mt-1"></i> Apa maksud setiap kod/ID yang anda jumpa.</li>
+                                <li class="flex items-start gap-3 text-slate-700"><i class="fas fa-key text-violet-500 mt-1"></i> Macam mana nak dapatkan "Kunci Digital" (Token) yang tidak luput.</li>
+                                <li class="flex items-start gap-3 text-slate-700"><i class="fas fa-robot text-violet-500 mt-1"></i> Bagaimana AI Agent di Antigravity menggunakan MCP untuk membaca ads dan membina kempen secara autonomi.</li>
+                                <li class="flex items-start gap-3 text-slate-700"><i class="fas fa-shield-alt text-violet-500 mt-1"></i> Macam mana nak hubungkan semuanya tanpa risiko akaun disekat atau bajet terbakar.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Bab 1 -->
+                <section id="bab1" class="scroll-mt-24">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 text-white text-lg">1</span>
+                        Kamus Istilah "Orang Awam"
+                    </h2>
+                    <p class="text-slate-600 mb-6">Sebelum kita tekan mana-mana butang, fahami istilah penting ini dengan <strong>Analogi Pejabat Korporat</strong>:</p>
+                    
+                    <div class="overflow-x-auto bg-white rounded-2xl shadow-lg border border-slate-200">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-800 border-b border-slate-200">
+                                    <th class="p-4 font-semibold w-1/4">Istilah Teknikal</th>
+                                    <th class="p-4 font-semibold w-1/4">Maksud Sebenar</th>
+                                    <th class="p-4 font-semibold w-1/4">Analogi Mudah</th>
+                                    <th class="p-4 font-semibold w-1/4">Di Mana Anda Jumpa?</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                                    <td class="p-4 font-medium text-meta">Facebook Page</td>
+                                    <td class="p-4 text-slate-600">Halaman perniagaan rasmi anda di Facebook.</td>
+                                    <td class="p-4 text-slate-600"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Papan Tanda Kedai</span> anda di tepi jalan.</td>
+                                    <td class="p-4 text-slate-500 font-mono text-xs">facebook.com/{nama-page}</td>
+                                </tr>
+                                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                                    <td class="p-4 font-medium text-meta">Meta Business Portfolio</td>
+                                    <td class="p-4 text-slate-600">Pusat kawalan bisnes yang memegang Page, akaun iklan, dan staf.</td>
+                                    <td class="p-4 text-slate-600"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Ibu Pejabat</span> yang memegang semua cawangan.</td>
+                                    <td class="p-4 text-slate-500 font-mono text-xs">business.facebook.com</td>
+                                </tr>
+                                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                                    <td class="p-4 font-medium text-meta">Meta Developer App</td>
+                                    <td class="p-4 text-slate-600">Aplikasi digital untuk benarkan sistem komputer bercakap dengan Facebook.</td>
+                                    <td class="p-4 text-slate-600"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Laluan Staf Belakang</span> untuk lori kargo keluar masuk.</td>
+                                    <td class="p-4 text-slate-500 font-mono text-xs">developers.facebook.com</td>
+                                </tr>
+                                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                                    <td class="p-4 font-medium text-meta">App ID & App Secret</td>
+                                    <td class="p-4 text-slate-600">Nombor pengenalan unik dan kata laluan rahsia bagi aplikasi developer anda.</td>
+                                    <td class="p-4 text-slate-600"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">No. IC & PIN Keselamatan</span> aplikasi anda.</td>
+                                    <td class="p-4 text-slate-600">Dalam App Settings Meta Developer.</td>
+                                </tr>
+                                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                                    <td class="p-4 font-medium text-meta">System User</td>
+                                    <td class="p-4 text-slate-600">Akaun pengguna digital (bukan manusia) khas untuk robot/automasi.</td>
+                                    <td class="p-4 text-slate-600"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Pekerja Robotik</span> yang dijaga khas 24 jam.</td>
+                                    <td class="p-4 text-slate-600">Meta Business Settings -> System Users.</td>
+                                </tr>
+                                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                                    <td class="p-4 font-medium text-meta">Access Token</td>
+                                    <td class="p-4 text-slate-600">Kod teks panjang (mula dengan EAA...). Bertindak sebagai kunci digital.</td>
+                                    <td class="p-4 text-slate-600"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Kunci Akses VIP</span> pejabat.</td>
+                                    <td class="p-4 text-slate-600">Dijana daripada System User / Graph Explorer.</td>
+                                </tr>
+                                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                                    <td class="p-4 font-medium text-meta">Page ID</td>
+                                    <td class="p-4 text-slate-600">Nombor siri unik 15-16 digit mewakili Facebook Page.</td>
+                                    <td class="p-4 text-slate-600"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Nombor Geran Kedai</span> anda.</td>
+                                    <td class="p-4 text-slate-600">Bahagian About Page anda.</td>
+                                </tr>
+                                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                                    <td class="p-4 font-medium text-meta">Ad Account ID</td>
+                                    <td class="p-4 text-slate-600">Nombor akaun iklan (format: act_123...).</td>
+                                    <td class="p-4 text-slate-600"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Nombor Akaun Bank</span> iklan.</td>
+                                    <td class="p-4 text-slate-600">Meta Ads Manager / Business Settings.</td>
+                                </tr>
+                                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                                    <td class="p-4 font-medium text-meta">MCP</td>
+                                    <td class="p-4 text-slate-600">Model Context Protocol. Protokol penyambung universal.</td>
+                                    <td class="p-4 text-slate-600"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Soket Palam USB-C</span> untuk otak AI.</td>
+                                    <td class="p-4 text-slate-600">Konfigurasi Antigravity (mcp_config.json).</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-4 font-medium text-meta">Antigravity IDE</td>
+                                    <td class="p-4 text-slate-600">Pusat arahan dan persekitaran kerja ejen AI.</td>
+                                    <td class="p-4 text-slate-600"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Bilik Kawalan Utama</span>.</td>
+                                    <td class="p-4 text-slate-600">Antigravity Desktop / CLI.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Bab 2 -->
+                <section id="bab2" class="scroll-mt-24">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 text-white text-lg">2</span>
+                        Membina Facebook Page & Mencari "Page ID"
+                    </h2>
+                    
+                    <div class="space-y-8">
+                        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 relative">
+                            <div class="absolute top-0 left-0 w-2 h-full bg-meta rounded-l-2xl"></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">Langkah 2.1: Bina Facebook Page (Jika Belum Ada)</h3>
+                            <ol class="list-decimal list-outside ml-6 space-y-4 text-slate-700">
+                                <li>Buka pelayar web dan layari <a href="https://www.facebook.com/pages/create" target="_blank" class="text-meta hover:underline">https://www.facebook.com/pages/create</a>.</li>
+                                <li>Pada panel sebelah kiri:
+                                    <ul class="list-disc list-outside ml-6 mt-2 space-y-2 text-slate-600">
+                                        <li><strong>Page Name</strong>: Masukkan nama syarikat (Contoh: <span class="font-mono text-sm bg-slate-100 px-1 rounded">Demo SME Sdn Bhd</span>).</li>
+                                        <li><strong>Category</strong>: Pilih kategori yang sesuai.</li>
+                                        <li><strong>Bio</strong>: Tulis 1-2 ayat ringkas mengenai bisnes anda.</li>
+                                    </ul>
+                                </li>
+                                <li>Tekan butang biru <strong class="bg-blue-600 text-white px-2 py-1 rounded text-sm font-normal">Create Page</strong> di bahagian bawah kiri.</li>
+                                <li>Muat naik gambar profil (Logo) dan gambar cover (Banner).</li>
+                                <li>Tekan butang "Save" / "Done".</li>
+                            </ol>
+                        </div>
+
+                        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 relative">
+                            <div class="absolute top-0 left-0 w-2 h-full bg-orange-400 rounded-l-2xl"></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">Langkah 2.2: Kat Mana Nak Cari "Page ID"? <span class="text-sm font-normal text-orange-600 bg-orange-100 px-2 py-1 rounded ml-2">Paling Penting!</span></h3>
+                            <p class="text-slate-600 mb-4 text-sm">Ramai orang tersilap masukkan nama Page, sedangkan sistem automasi hanya kenal Nombor ID.</p>
+                            
+                            <ol class="list-decimal list-outside ml-6 space-y-3 text-slate-700 mb-6">
+                                <li>Masuk ke Facebook Page anda sebagai profil Page tersebut.</li>
+                                <li>Di menu sebelah kiri, klik tab <strong>"About"</strong> (Tentang).</li>
+                                <li>Skrol ke bawah dan klik tab <strong>"Page Transparency"</strong> (Ketelusan Halaman).</li>
+                                <li>Anda akan melihat satu kotak maklumat bertulis: 
+                                    <br><span class="font-mono bg-slate-100 text-slate-800 px-3 py-1 rounded mt-2 inline-block shadow-inner border border-slate-200">Page ID: 1389752850879310</span>
+                                </li>
+                            </ol>
+
+                            <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 flex items-start gap-4">
+                                <i class="fas fa-clipboard-check text-2xl text-violet-500 mt-1"></i>
+                                <div>
+                                    <strong class="text-violet-900 block mb-1">Tindakan Anda:</strong>
+                                    <p class="text-violet-800 text-sm">Salin nombor ini dan simpan dalam Notepad anda. Labelkan sebagai <code class="bg-violet-200 px-1 rounded font-bold">META_PAGE_ID</code>.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Bab 3 -->
+                <section id="bab3" class="scroll-mt-24">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 text-white text-lg">3</span>
+                        Menyediakan Meta Business Suite & Akaun Iklan
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">3.1: Buka Meta Business Suite</h3>
+                            <ol class="list-decimal list-outside ml-5 space-y-3 text-slate-700 text-sm">
+                                <li>Buka <a href="https://business.facebook.com/" target="_blank" class="text-meta hover:underline font-mono">business.facebook.com</a>.</li>
+                                <li>Di penjuru atas kiri, pastikan nama Business Portfolio / Perniagaan anda dipilih.</li>
+                                <li>Di menu bar sisi sebelah kiri paling bawah, cari dan klik ikon gear bertulis <strong>"Settings"</strong> atau terus ke <a href="https://business.facebook.com/settings" target="_blank" class="text-meta hover:underline break-all">business.facebook.com/settings</a>.</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">3.2: Dapatkan / Cipta "Ad Account ID"</h3>
+                            <p class="text-xs text-slate-500 mb-3">Sistem AI memerlukan Ad Account ID untuk merangka kempen iklan.</p>
+                            <ol class="list-decimal list-outside ml-5 space-y-2 text-slate-700 text-sm mb-4">
+                                <li>Di Business Settings, lihat menu kiri bawah "Accounts".</li>
+                                <li>Klik <strong>"Ad Accounts"</strong> (Akaun Iklan).</li>
+                                <li>Jika sudah ada: Lihat ID di sebelah nama. Format: <code class="bg-slate-100 px-1 rounded">act_123456789...</code></li>
+                                <li>Jika belum ada: Klik butang <strong class="text-meta">Add</strong> -> <strong>Create a new ad account</strong>.
+                                    <ul class="list-disc ml-5 mt-1 text-xs text-slate-600">
+                                        <li>Timezone: <span class="font-bold text-slate-800">GMT+08:00 Asia/Kuala_Lumpur</span></li>
+                                        <li>Currency: <span class="font-bold text-slate-800">MYR</span></li>
+                                    </ul>
+                                </li>
+                            </ol>
+                            <div class="bg-slate-100 p-3 rounded-lg text-sm border-l-4 border-meta">
+                                Simpan nombor ini sebagai <code class="font-bold text-meta">META_AD_ACCOUNT_ID</code>. (Mesti ada awalan <code>act_</code>).
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Bab 4 -->
+                <section id="bab4" class="scroll-mt-24">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 text-white text-lg">4</span>
+                        Daftar Meta Developer App (Laluan Rasmi API)
+                    </h2>
+                    <p class="text-slate-600 mb-6">Untuk membolehkan kod bercakap dengan Meta, kita perlu daftarkan satu "Aplikasi Penghubung".</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="flex-1 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                                <h3 class="text-lg font-bold text-slate-800 mb-3">4.1: Portal Meta for Developers</h3>
+                                <ul class="space-y-2 text-slate-700 text-sm">
+                                    <li><i class="fas fa-chevron-right text-meta text-xs mr-2"></i>Layari: <a href="https://developers.facebook.com/" target="_blank" class="text-meta font-mono">developers.facebook.com</a></li>
+                                    <li><i class="fas fa-chevron-right text-meta text-xs mr-2"></i>Log masuk akaun Facebook anda.</li>
+                                    <li><i class="fas fa-chevron-right text-meta text-xs mr-2"></i>Klik "Get Started" jika pertama kali.</li>
+                                    <li><i class="fas fa-chevron-right text-meta text-xs mr-2"></i>Pergi ke menu <strong>"My Apps"</strong>.</li>
+                                </ul>
+                            </div>
+                            <div class="flex-1 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                                <h3 class="text-lg font-bold text-slate-800 mb-3">4.2: Cipta Aplikasi Baharu</h3>
+                                <ul class="space-y-2 text-slate-700 text-sm">
+                                    <li><i class="fas fa-chevron-right text-meta text-xs mr-2"></i>Klik butang <strong>Create App</strong>.</li>
+                                    <li><i class="fas fa-chevron-right text-meta text-xs mr-2"></i>Use Case: Pilih <strong>Other</strong> -> Next.</li>
+                                    <li><i class="fas fa-chevron-right text-meta text-xs mr-2"></i>App Type: Pilih <strong>Business</strong> -> Next.</li>
+                                    <li><i class="fas fa-chevron-right text-meta text-xs mr-2"></i>App Name: <code class="bg-slate-100 px-1 rounded">Demo_SME_Automation</code> <em>(Jangan letak perkataan Meta/FB)</em>.</li>
+                                    <li><i class="fas fa-chevron-right text-meta text-xs mr-2"></i>Pilih Business Account anda -> <strong>Create App</strong>.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- 4.3 App ID & Secret Warning -->
+                        <div class="bg-red-50 border border-red-200 rounded-2xl p-6 relative overflow-hidden">
+                            <div class="absolute -right-4 -bottom-4 text-red-100 opacity-50">
+                                <i class="fas fa-shield-alt text-9xl"></i>
+                            </div>
+                            <div class="relative z-10">
+                                <h3 class="text-xl font-bold text-red-800 mb-4 flex items-center gap-2">
+                                    <i class="fas fa-exclamation-triangle"></i> Langkah 4.3: Di Mana Nak Ambil App ID & Secret?
+                                </h3>
+                                <ol class="list-decimal list-inside space-y-2 text-red-900 mb-6 font-medium">
+                                    <li>Di menu kiri (Dashboard App), klik <strong>App settings -> Basic</strong>.</li>
+                                    <li>Salin <strong>App ID</strong> <i class="fas fa-arrow-right mx-2 text-xs"></i> Simpan sebagai <code class="bg-white px-2 py-1 rounded text-red-700 font-bold">META_APP_ID</code></li>
+                                    <li>Klik butang 'Show' pada kotak bertutup untuk paparkan <strong>App Secret</strong>.</li>
+                                    <li>Salin kod tersebut <i class="fas fa-arrow-right mx-2 text-xs"></i> Simpan sebagai <code class="bg-white px-2 py-1 rounded text-red-700 font-bold">META_APP_SECRET</code></li>
+                                </ol>
+                                
+                                <div class="bg-red-600 text-white p-4 rounded-xl flex items-start gap-4 shadow-lg">
+                                    <i class="fas fa-lock text-2xl mt-1"></i>
+                                    <div>
+                                        <h4 class="font-bold">AMARAN KESELAMATAN</h4>
+                                        <p class="text-sm text-red-100 mt-1">App Secret ibarat nombor PIN kad ATM anda. Jangan sesekali kongsi kod ini di Facebook, WhatsApp awam, atau GitHub!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Bab 5 -->
+                <section id="bab5" class="scroll-mt-24">
+                    <div class="bg-slate-900 text-white p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-violet-600 rounded-full blur-3xl opacity-20 -mr-20 -mt-20"></div>
+                        <div class="absolute bottom-0 left-0 w-64 h-64 bg-meta rounded-full blur-3xl opacity-20 -ml-20 -mb-20"></div>
+                        
+                        <div class="relative z-10">
+                            <h2 class="text-3xl font-bold mb-4 flex items-center gap-3">
+                                <span class="flex items-center justify-center w-10 h-10 rounded-full bg-white text-slate-900 text-lg">5</span>
+                                System User & Token Akses Kekal
+                            </h2>
+                            <p class="text-slate-300 text-sm mb-8 font-medium">THE HOLY GRAIL: Kenapa guna System User? Token biasa luput 1 jam/60 hari (automasi akan mati malam-malam!). Token System User adalah KEKAL (Never-Expiring).</p>
+                            
+                            <div class="grid md:grid-cols-3 gap-6">
+                                <!-- 5.1 -->
+                                <div class="bg-slate-800/50 border border-slate-700 p-5 rounded-xl backdrop-blur-sm">
+                                    <h3 class="font-bold text-violet-300 mb-3 border-b border-slate-600 pb-2">5.1: Cipta System User</h3>
+                                    <ul class="space-y-2 text-sm text-slate-300">
+                                        <li>Buka <a href="https://business.facebook.com/settings" class="text-meta hover:underline">Business Settings</a>.</li>
+                                        <li>Menu Kiri: <strong>Users -> System Users</strong>.</li>
+                                        <li>Klik butang <strong>Add</strong>.</li>
+                                        <li>Nama: <code class="bg-slate-900 text-white px-1 rounded">Jebat_Bot</code></li>
+                                        <li>Role: Pilih <strong class="text-white">Admin</strong> (Wajib).</li>
+                                        <li>Klik <strong>Create</strong>.</li>
+                                    </ul>
+                                </div>
+
+                                <!-- 5.2 -->
+                                <div class="bg-slate-800/50 border border-slate-700 p-5 rounded-xl backdrop-blur-sm">
+                                    <h3 class="font-bold text-violet-300 mb-3 border-b border-slate-600 pb-2">5.2: Assign Assets <span class="text-xs bg-red-500 text-white px-1 rounded ml-1">PENTING</span></h3>
+                                    <ul class="space-y-2 text-sm text-slate-300">
+                                        <li>Klik nama Bot tadi, tekan <strong>Assign Assets</strong>.</li>
+                                        <li><i class="fas fa-check text-green-400 mr-2 text-xs"></i><strong>Pages:</strong> Tanda Page anda -> Buka suis <em>Full Control</em>.</li>
+                                        <li><i class="fas fa-check text-green-400 mr-2 text-xs"></i><strong>Ad Accounts:</strong> Tanda Akaun anda -> Buka suis <em>Manage Campaigns</em>.</li>
+                                        <li>Klik <strong>Save Changes</strong>.</li>
+                                    </ul>
+                                </div>
+
+                                <!-- 5.3 -->
+                                <div class="bg-slate-800/50 border border-slate-700 p-5 rounded-xl backdrop-blur-sm border-l-4 border-l-meta">
+                                    <h3 class="font-bold text-violet-300 mb-3 border-b border-slate-600 pb-2">5.3: Generate Token</h3>
+                                    <ul class="space-y-2 text-sm text-slate-300">
+                                        <li>Klik <strong>Generate New Token</strong>.</li>
+                                        <li>Select App: Pilih App Bab 4.</li>
+                                        <li>Expiration: <strong class="text-green-400 border-b border-green-400 border-dashed">Never</strong>.</li>
+                                        <li>Tick Permissions (Sangat Penting):</li>
+                                    </ul>
+                                    <div class="mt-3 flex flex-wrap gap-1 text-[10px] font-mono">
+                                        <span class="bg-slate-900 px-2 py-1 rounded text-slate-400">pages_show_list</span>
+                                        <span class="bg-slate-900 px-2 py-1 rounded text-slate-400">pages_read_engagement</span>
+                                        <span class="bg-slate-900 px-2 py-1 rounded text-slate-400">pages_manage_posts</span>
+                                        <span class="bg-slate-900 px-2 py-1 rounded text-slate-400">pages_manage_engagement</span>
+                                        <span class="bg-slate-900 px-2 py-1 rounded text-slate-400">ads_management</span>
+                                        <span class="bg-slate-900 px-2 py-1 rounded text-slate-400">ads_read</span>
+                                        <span class="bg-slate-900 px-2 py-1 rounded text-slate-400">leads_retrieval</span>
+                                        <span class="bg-slate-900 px-2 py-1 rounded text-slate-400">pages_manage_ads</span>
+                                    </div>
+                                    <p class="mt-4 text-xs text-yellow-300 font-medium bg-slate-900 p-2 rounded">SIMPAN token panjang (EAA...) sebagai META_SYSTEM_USER_TOKEN. Meta tak tunjuk lagi lepas ni!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Bab 6 -->
+                    <section id="bab6" class="scroll-mt-24">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+                            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-900 text-white text-sm">6</span>
+                            Uji Token (Graph API)
+                        </h2>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-full">
+                            <p class="text-sm text-slate-600 mb-4">Uji sama ada kunci sah dan berfungsi.</p>
+                            <ol class="list-decimal ml-4 text-sm text-slate-700 space-y-2 mb-4">
+                                <li>Buka <a href="https://developers.facebook.com/tools/explorer/" target="_blank" class="text-meta hover:underline">Graph API Explorer</a>.</li>
+                                <li>Padam Access Token lama, tampal (paste) Token System User (EAA...) anda.</li>
+                                <li>Di bar URL (Kaedah GET), taip:
+                                    <div class="bg-slate-800 text-green-400 font-mono p-2 rounded mt-1 shadow-inner inline-block">me?fields=name,id</div>
+                                </li>
+                                <li>Klik <strong>Submit</strong>.</li>
+                            </ol>
+                            <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg">
+                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wide block mb-1">Hasil (Status: 200 OK)</span>
+                                <pre class="text-xs font-mono text-slate-700">{
+  "name": "Demo_App",
+  "id": "112233445566"
+}</pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Bab 7 -->
+                    <section id="bab7" class="scroll-mt-24">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+                            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-900 text-white text-sm">7</span>
+                            Dapatkan Instant Form ID
+                        </h2>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-full">
+                            <p class="text-sm text-slate-600 mb-4">Untuk kempen Lead Generation.</p>
+                            <ol class="list-decimal ml-4 text-sm text-slate-700 space-y-2">
+                                <li>Di Business Suite, cari <strong>All Tools -> Instant Forms</strong>.</li>
+                                <li>Klik <strong>Create Form</strong> -> New Form.</li>
+                                <li>Isi nama (Borang_Pertanyaan).</li>
+                                <li>Tambah soalan: Contact Fields -> <strong>Phone Number</strong>.</li>
+                                <li>Letak URL Privacy Policy.</li>
+                                <li>Klik <strong>Create Form</strong>.</li>
+                            </ol>
+                            <div class="mt-6 bg-blue-50 border border-blue-200 p-4 rounded-xl flex items-center gap-3">
+                                <i class="fas fa-search text-blue-500 text-xl"></i>
+                                <p class="text-sm text-blue-900">Salin Form ID dari senarai dan labelkan sebagai <code class="font-bold font-mono">META_LEAD_FORM_ID</code>.</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Bab 8 -->
+                <section id="bab8" class="scroll-mt-24">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 text-white text-lg">8</span>
+                        Susun Semua ID & Token Ke Dalam Fail .env
+                    </h2>
+                    <p class="text-slate-600 mb-4">Semua maklumat dari Bab 2-7 kini sedia dipasang ke dalam fail tetapan rahsia (Environment Variables). Ia berfungsi seperti kabinet simpanan kunci.</p>
+                    
+                    <div class="relative bg-[#1e1e1e] rounded-2xl shadow-xl overflow-hidden group">
+                        <!-- Mac style window header -->
+                        <div class="bg-[#2d2d2d] px-4 py-2 flex justify-between items-center border-b border-gray-700">
+                            <div class="flex gap-2">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <span class="text-gray-400 text-xs font-mono">.env</span>
+                            <button onclick="copyEnvCode()" class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-xs bg-gray-700 px-3 py-1 rounded cursor-pointer" aria-label="Copy code">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <!-- Code Content -->
+                        <pre id="envCodeBlock" class="p-6 text-sm font-mono overflow-x-auto text-[#d4d4d4] leading-relaxed">
+<span class="text-green-400"># ==============================================================================</span>
+<span class="text-green-400"># TETAPAN KREDENSIAL AUTOMATION SISTEM OPERASI AI (AI-MOS)</span>
+<span class="text-green-400"># PROJEK: DEMO SME SDN BHD</span>
+<span class="text-green-400"># ==============================================================================</span>
+
+<span class="text-green-400"># 1. DARI BAB 4 (META DEVELOPER APP)</span>
+<span class="text-blue-300">META_APP_ID</span>=<span class="text-orange-300">1122334455667788</span>
+<span class="text-blue-300">META_APP_SECRET</span>=<span class="text-orange-300">a1b2c3d4e5f67890abcdef1234567890</span>
+<span class="text-blue-300">META_GRAPH_VERSION</span>=<span class="text-orange-300">v21.0</span>
+
+<span class="text-green-400"># 2. DARI BAB 5 (SYSTEM USER NEVER-EXPIRING TOKEN)</span>
+<span class="text-blue-300">META_SYSTEM_USER_TOKEN</span>=<span class="text-orange-300">EAABcdefgh1234567890long_token_here_never_expire</span>
+
+<span class="text-green-400"># 3. DARI BAB 2 (FACEBOOK PAGE ID)</span>
+<span class="text-blue-300">META_PAGE_ID</span>=<span class="text-orange-300">1389752850879310</span>
+
+<span class="text-green-400"># 4. DARI BAB 3 (AD ACCOUNT ID)</span>
+<span class="text-blue-300">META_AD_ACCOUNT_ID</span>=<span class="text-orange-300">act_123456789012345</span>
+
+<span class="text-green-400"># 5. DARI BAB 7 (INSTANT LEAD FORM ID)</span>
+<span class="text-blue-300">META_LEAD_FORM_ID</span>=<span class="text-orange-300">1456204426381022</span>
+
+<span class="text-green-400"># 6. KAWALAN KESELAMATAN SILING BAJET (HARD-LOCK SAFETY)</span>
+<span class="text-blue-300">MAX_DAILY_AD_BUDGET_MYR</span>=<span class="text-orange-300">15.00</span>
+<span class="text-blue-300">DEFAULT_AD_STATUS</span>=<span class="text-orange-300">PAUSED</span>
+</pre>
+                    </div>
+                </section>
+
+                <!-- Bab 9 -->
+                <section id="bab9" class="scroll-mt-24">
+                    <div class="bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 rounded-3xl p-8 shadow-lg">
+                        <h2 class="text-3xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                            <span class="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-600 text-white text-lg"><i class="fas fa-rocket"></i></span>
+                            Integrasi Antigravity & MCP (AI Agent)
+                        </h2>
+                        <p class="text-slate-600 font-medium italic mb-8">
+                            (Ini bahagian paling moden dan berkuasa dalam buku ini! Bukan lagi bercakap pasal kod skrip manual, tapi bagaimana AI Agent berfikir dan bertindak sendiri).
+                        </p>
+
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 mb-8">
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">9.1 Kenapa Guna MCP & AI Agent?</h3>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="text-red-500 font-bold text-sm uppercase mb-2"><i class="fas fa-times-circle"></i> Cara Lama (Manual)</h4>
+                                    <ul class="space-y-2 text-sm text-slate-600">
+                                        <li>Kena upah programmer tulis Python ratusan baris.</li>
+                                        <li>Bila API berubah, skrip rosak, koding balik.</li>
+                                        <li>Manusia masih kena buka Ads Manager setiap hari.</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="text-ai font-bold text-sm uppercase mb-2"><i class="fas fa-check-circle"></i> Cara Baru (MCP + AI)</h4>
+                                    <ul class="space-y-2 text-sm text-slate-600">
+                                        <li><strong>LLM (Otak):</strong> Menganalisis metrik & copywriting.</li>
+                                        <li><strong>MCP (Tangan & Mata):</strong> Sambung terus ke Meta API.</li>
+                                        <li>Arahan dlm bahasa biasa: <em>"Tolong baca kempen hari ni, kalau CTR teruk, tukar copywriting."</em></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4 Objectives -->
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">9.2 Empat Objektif & Jangkaan Hasil</h3>
+                        <div class="grid md:grid-cols-2 gap-4 mb-10">
+                            <div class="bg-white p-5 rounded-xl border border-indigo-100 shadow-sm">
+                                <h4 class="font-bold text-indigo-700 mb-2">🎯 1. Audit Masa Nyata (Real-Time)</h4>
+                                <p class="text-sm text-slate-600">AI panggil <code>meta_get_insights</code>. Jika CTR &lt; 1%, AI amaran di WhatsApp & sedia ayat baru sbb audiens dah jemu (fatigue).</p>
+                            </div>
+                            <div class="bg-white p-5 rounded-xl border border-indigo-100 shadow-sm">
+                                <h4 class="font-bold text-indigo-700 mb-2">🎯 2. Draf Kempen Pintar</h4>
+                                <p class="text-sm text-slate-600">Anda suruh: "Buat kempen lead restoran". AI guna <code>meta_create_campaign_draft</code>, set bajet selamat, status <strong>PAUSED</strong>. Tiada sen terbakar.</p>
+                            </div>
+                            <div class="bg-white p-5 rounded-xl border border-indigo-100 shadow-sm">
+                                <h4 class="font-bold text-indigo-700 mb-2">🎯 3. Kawalan Bajet (Hard-Lock)</h4>
+                                <p class="text-sm text-slate-600">AI semak baki dengan <code>meta_get_ad_account_details</code>. Halang bajet lebih RM15 tanpa pengesahan manusia.</p>
+                            </div>
+                            <div class="bg-white p-5 rounded-xl border border-indigo-100 shadow-sm">
+                                <h4 class="font-bold text-indigo-700 mb-2">🎯 4. Diagnosis Ralat (Self-Healing)</h4>
+                                <p class="text-sm text-slate-600">Jika iklan ditolak (Ad Rejected), AI faham kod ralat, terjemah ke BM, dan baiki ayat janji berlebihan secara automatik.</p>
+                            </div>
+                        </div>
+
+                        <!-- ASCII Diagram -->
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">9.3 Kitaran Autonomi Latar Belakang</h3>
+                        <div class="bg-[#0f172a] p-4 rounded-xl overflow-x-auto border border-slate-700 shadow-inner mb-8">
+<pre class="text-[#a5b4fc] text-xs font-mono leading-tight">
+┌────────────────────────────────────────────────────────────────────────┐
+│ 1. PENGGUNA MEMBERI ARAHAN DALAM BAHASA MELAYU                         │
+│    "Juru Audit, semak akaun iklan aku hari ni. Ada jalan ke tak?"      │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ 2. ANTIGRAVITY ORCHESTRATION (OTAK AI MENILAI ARAHAN)                  │
+│    - Ejen memilih Tool MCP: meta_get_ad_account_details & insights.    │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ 3. META ADS MCP SERVER (JAMBATAN PROTOKOL)                            │
+│    - Mengambil Token System User daripada fail .env.                  │
+│    - Menghantar panggilan rasmi ke Meta Graph API (v21.0).             │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ 4. PELAYAN META ADS (FACEBOOK SERVER)                                  │
+│    - Memulangkan data: Spend: RM0.00, Status: PAUSED, Leads: 0.        │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ <span class="text-ai font-bold">5. EJEN AI MEMBUAT KESIMPULAN & LAPORAN BAHASA MANUSIA                 │
+│    "Boss, akaun iklan selamat. Kempen PAUSED. Belanja RM0.00."</span>         │
+└────────────────────────────────────────────────────────────────────────┘
+</pre>
+                        </div>
+
+                        <!-- Chat Simulation -->
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">9.5 Senario Sebenar: Dialog Anda Bersama Ejen AI</h3>
+                        
+                        <div class="space-y-4">
+                            <!-- User Message -->
+                            <div class="flex items-end justify-end gap-2">
+                                <div class="bg-blue-600 text-white p-3 rounded-2xl rounded-br-none max-w-md shadow-sm text-sm">
+                                    "Juru Audit, tolong buat audit akaun iklan aku. Kenapa rasa macam lead masuk sikit sangat minggu ni?"
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 overflow-hidden"><i class="fas fa-user text-xs"></i></div>
+                            </div>
+                            
+                            <!-- System Thought Process -->
+                            <div class="flex justify-center my-2">
+                                <span class="bg-slate-200/50 text-slate-500 text-xs px-3 py-1 rounded-full italic border border-slate-300">
+                                    <i class="fas fa-cog fa-spin mr-1"></i> Ejen memanggil tool: <code>meta_list_campaigns</code> & <code>meta_get_insights</code>
+                                </span>
+                            </div>
+
+                            <!-- AI Response -->
+                            <div class="flex items-end gap-2">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-ai to-teal-400 flex items-center justify-center text-white shadow-md"><i class="fas fa-robot text-xs"></i></div>
+                                <div class="bg-white text-slate-700 p-4 rounded-2xl rounded-bl-none max-w-lg shadow-sm text-sm border border-slate-200">
+                                    <p class="font-bold text-slate-900 mb-2">"Boss, saya dah selesai audit. Ini dapatan saya:"</p>
+                                    <ol class="list-decimal ml-4 space-y-1 mb-3">
+                                        <li>Kempen 'SME Leads' aktif bajet RM15/hari.</li>
+                                        <li>Frekuensi cecah 3.4 (orang sama nampak &gt;3 kali).</li>
+                                        <li><strong class="text-red-500">CTR jatuh ke 0.65%. Ini tanda Ad Fatigue (audiens jemu).</strong></li>
+                                    </ol>
+                                    <p class="bg-indigo-50 p-2 rounded text-indigo-900 border border-indigo-100">
+                                        <strong>Cadangan:</strong> Ejen Seniman dah siapkan 2 visual baharu. Adakah bos setuju untuk saya tukar visual dlm draf iklan?
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Bab 10 -->
+                <section id="bab10" class="scroll-mt-24">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 text-white text-lg">10</span>
+                        Cara Selesaikan Masalah (Error)
+                    </h2>
+                    
+                    <div class="overflow-x-auto bg-white rounded-2xl shadow-sm border border-slate-200">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-red-50 text-red-900 border-b border-red-100">
+                                    <th class="p-4 font-semibold">Kod Ralat</th>
+                                    <th class="p-4 font-semibold">Mesej Lazim</th>
+                                    <th class="p-4 font-semibold">Sebab Utama</th>
+                                    <th class="p-4 font-semibold">Cara Selesai Segera</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm text-slate-700">
+                                <tr class="border-b border-slate-100">
+                                    <td class="p-4 font-mono font-bold text-red-600">Error 190</td>
+                                    <td class="p-4">Invalid OAuth access token</td>
+                                    <td class="p-4">Token salah salin, atau guna token sementara yg dah luput.</td>
+                                    <td class="p-4 text-green-700">Jana token baharu (System User). Pilih tempoh <strong class="bg-green-100 px-1 rounded">Never</strong>.</td>
+                                </tr>
+                                <tr class="border-b border-slate-100 bg-slate-50">
+                                    <td class="p-4 font-mono font-bold text-red-600">Error 200 / 100</td>
+                                    <td class="p-4">Permissions error / Missing scope</td>
+                                    <td class="p-4">System User takde kebenaran utk fungsi tu.</td>
+                                    <td class="p-4">Semak Bab 5.3. Tick kebenaran <code class="bg-white border rounded px-1 text-xs">ads_management</code> dll.</td>
+                                </tr>
+                                <tr class="border-b border-slate-100">
+                                    <td class="p-4 font-mono font-bold text-red-600">Error 273</td>
+                                    <td class="p-4">Cannot create ad for this page</td>
+                                    <td class="p-4">System User belum diberi aset Page/Ad Account.</td>
+                                    <td class="p-4">Masuk Business Settings -> System Users -> <strong>Assign Assets</strong>.</td>
+                                </tr>
+                                <tr class="border-b border-slate-100 bg-slate-50">
+                                    <td class="p-4 font-mono font-bold text-red-600">Error 1487843</td>
+                                    <td class="p-4">Dev mode app restriction</td>
+                                    <td class="p-4">Meta App masih status In Development (tak boleh post awam).</td>
+                                    <td class="p-4">Guna muat naik <code class="bg-white border rounded px-1 text-xs">published: false</code> sebelum dipaut ke iklan.</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 font-mono font-bold text-red-600">Timeout</td>
+                                    <td class="p-4">Tool call failed / Server unavailable</td>
+                                    <td class="p-4">Pelayan MCP lokal belum hidup / port salah.</td>
+                                    <td class="p-4">Pastikan .env ada port yg betul & jalankan health-check MCP.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Checklist -->
+                <section id="checklist" class="scroll-mt-24 pb-20">
+                    <div class="bg-white p-8 rounded-3xl shadow-xl border-t-8 border-meta">
+                        <h2 class="text-3xl font-bold text-slate-900 mb-6 text-center">
+                            <i class="fas fa-tasks text-meta mr-2"></i> Senarai Semak Akhir (Checklist)
+                        </h2>
+                        <p class="text-center text-slate-500 mb-8 text-sm">Sebelum Present atau Terbit Ebook. Klik untuk tandakan.</p>
+                        
+                        <div class="space-y-4 max-w-2xl mx-auto">
+                            <!-- Checkbox 1 -->
+                            <label class="check-container flex items-center gap-4 cursor-pointer p-4 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200">
+                                <input type="checkbox" class="hidden peer">
+                                <div class="w-6 h-6 rounded-md border-2 border-slate-300 flex items-center justify-center transition-all peer-checked:bg-ai peer-checked:border-ai">
+                                    <i class="fas fa-check text-white text-xs opacity-0 transition-opacity"></i>
+                                </div>
+                                <span class="text-slate-700 font-medium transition-all text-lg">Saya faham beza Page ID, Ad Account ID, App ID, App Secret, dan Access Token.</span>
+                            </label>
+
+                            <!-- Checkbox 2 -->
+                            <label class="check-container flex items-center gap-4 cursor-pointer p-4 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200">
+                                <input type="checkbox" class="hidden peer">
+                                <div class="w-6 h-6 rounded-md border-2 border-slate-300 flex items-center justify-center transition-all peer-checked:bg-ai peer-checked:border-ai">
+                                    <i class="fas fa-check text-white text-xs opacity-0 transition-opacity"></i>
+                                </div>
+                                <span class="text-slate-700 font-medium transition-all text-lg">Saya ada System User berstatus Admin dengan aset Page dan Ad Account disambungkan.</span>
+                            </label>
+
+                            <!-- Checkbox 3 -->
+                            <label class="check-container flex items-center gap-4 cursor-pointer p-4 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200">
+                                <input type="checkbox" class="hidden peer">
+                                <div class="w-6 h-6 rounded-md border-2 border-slate-300 flex items-center justify-center transition-all peer-checked:bg-ai peer-checked:border-ai">
+                                    <i class="fas fa-check text-white text-xs opacity-0 transition-opacity"></i>
+                                </div>
+                                <span class="text-slate-700 font-medium transition-all text-lg">Saya ada Token Akses Kekal (Never-Expiring) yang bermula dengan EAA....</span>
+                            </label>
+
+                            <!-- Checkbox 4 -->
+                            <label class="check-container flex items-center gap-4 cursor-pointer p-4 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200">
+                                <input type="checkbox" class="hidden peer">
+                                <div class="w-6 h-6 rounded-md border-2 border-slate-300 flex items-center justify-center transition-all peer-checked:bg-ai peer-checked:border-ai">
+                                    <i class="fas fa-check text-white text-xs opacity-0 transition-opacity"></i>
+                                </div>
+                                <span class="text-slate-700 font-medium transition-all text-lg">Saya faham bagaimana Antigravity + MCP membolehkan Ejen AI membaca metrik ads dan membuat draf secara automatik.</span>
+                            </label>
+
+                            <!-- Checkbox 5 -->
+                            <label class="check-container flex items-center gap-4 cursor-pointer p-4 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200">
+                                <input type="checkbox" class="hidden peer">
+                                <div class="w-6 h-6 rounded-md border-2 border-slate-300 flex items-center justify-center transition-all peer-checked:bg-ai peer-checked:border-ai">
+                                    <i class="fas fa-check text-white text-xs opacity-0 transition-opacity"></i>
+                                </div>
+                                <span class="text-slate-700 font-medium transition-all text-lg">Semua kempen iklan dikunci kepada status PAUSED untuk keselamatan kewangan mutlak (RM 0.00 spend).</span>
+                            </label>
+
+                            <!-- Checkbox 6 -->
+                            <label class="check-container flex items-center gap-4 cursor-pointer p-4 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200">
+                                <input type="checkbox" class="hidden peer">
+                                <div class="w-6 h-6 rounded-md border-2 border-slate-300 flex items-center justify-center transition-all peer-checked:bg-ai peer-checked:border-ai">
+                                    <i class="fas fa-check text-white text-xs opacity-0 transition-opacity"></i>
+                                </div>
+                                <span class="text-slate-700 font-medium transition-all text-lg">Saya tahu cara menjawab soalan pensyarah sekiranya ditanya mengenai etika kawalan bajet AI.</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-12 text-center text-slate-400 text-sm">
+                        Modul Ebook ini disediakan oleh <strong>Pasukan Orkestrasi Ejen AI DFK INC / syahmiaof</strong>.
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Navigation Drawer Overlay (Hidden by default) -->
+    <div id="mobile-overlay" class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity opacity-0" onclick="toggleMobileMenu()"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-y-0 right-0 w-64 bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden shadow-2xl overflow-y-auto">
+        <div class="p-4 flex justify-between items-center border-b border-slate-100">
+            <h3 class="font-bold text-slate-800">Menu Kandungan</h3>
+            <button onclick="toggleMobileMenu()" class="text-slate-500 hover:text-slate-800 p-2"><i class="fas fa-times"></i></button>
+        </div>
+        <nav class="p-4 space-y-1" id="mobile-toc" onclick="setTimeout(toggleMobileMenu, 200)">
+             <!-- Dynamically mirror desktop nav via JS or duplicate -->
+        </nav>
+    </div>
+
+    <script>
+        // Copy to Clipboard logic avoiding alert()
+        function copyEnvCode() {
+            // Target the pre element text
+            const codeText = document.getElementById('envCodeBlock').innerText;
+            
+            // Create a temporary textarea for copying (better compatibility in iframes)
+            const textArea = document.createElement("textarea");
+            textArea.value = codeText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast("Berjaya disalin ke clipboard!");
+            } catch (err) {
+                showToast("Gagal menyalin kod.", false);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        // Custom Toast Notification System
+        function showToast(message, isSuccess = true) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-msg');
+            const icon = toast.querySelector('i');
+            
+            msgEl.textContent = message;
+            
+            if(isSuccess) {
+                icon.className = 'fas fa-check-circle text-green-400';
+            } else {
+                icon.className = 'fas fa-exclamation-circle text-red-400';
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Mobile Menu Logic
+        const mobileMenu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('mobile-overlay');
+
+        function toggleMobileMenu() {
+            const isClosed = mobileMenu.classList.contains('translate-x-full');
+            if(isClosed) {
+                mobileMenu.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+            } else {
+                mobileMenu.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+        }
+
+        // Mirror desktop navigation to mobile
+        document.addEventListener('DOMContentLoaded', () => {
+            const desktopNav = document.getElementById('toc').innerHTML;
+            document.getElementById('mobile-toc').innerHTML = desktopNav;
+            
+            // Setup active link highlight based on scroll position (ScrollSpy)
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('#toc a, #mobile-toc a');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    // Offset for header padding
+                    if (pageYOffset >= (sectionTop - 150)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('bg-blue-50', 'text-meta', 'font-bold');
+                    link.classList.add('text-slate-600', 'font-medium');
+                    if (link.getAttribute('href').includes(current) && current !== '') {
+                        link.classList.add('bg-blue-50', 'text-meta', 'font-bold');
+                        link.classList.remove('text-slate-600', 'font-medium');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
