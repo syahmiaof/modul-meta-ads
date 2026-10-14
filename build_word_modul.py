@@ -162,7 +162,7 @@ def generate_modul_docx():
 
     def add_chapter_title(num, title):
         p = doc.add_paragraph()
-        p.paragraph_format.space_before = Pt(22)
+        p.paragraph_format.space_before = Pt(12)
         p.paragraph_format.space_after = Pt(8)
         p.paragraph_format.keep_with_next = True
         
@@ -260,11 +260,11 @@ def generate_modul_docx():
         p_sp.paragraph_format.space_after = Pt(4)
 
     # ==========================================
-    # 1. COVER / HERO SECTION
+    # 1. COVER / HERO SECTION (PAGE 1)
     # ==========================================
     p_badge = doc.add_paragraph()
-    p_badge.paragraph_format.space_before = Pt(20)
-    p_badge.paragraph_format.space_after = Pt(6)
+    p_badge.paragraph_format.space_before = Pt(10)
+    p_badge.paragraph_format.space_after = Pt(4)
     r_badge = p_badge.add_run("EDISI TERKINI 2026 • PANDUAN PRAKTIKAL INDUSTRI")
     r_badge.font.name = 'Calibri'
     r_badge.font.size = Pt(9.5)
@@ -272,20 +272,20 @@ def generate_modul_docx():
     r_badge.font.color.rgb = RGBColor(124, 58, 237) # Violet
 
     p_title = doc.add_paragraph()
-    p_title.paragraph_format.space_before = Pt(4)
-    p_title.paragraph_format.space_after = Pt(6)
+    p_title.paragraph_format.space_before = Pt(2)
+    p_title.paragraph_format.space_after = Pt(4)
     r_title1 = p_title.add_run("MODUL LENGKAP: META ADS & API AUTOMATION")
     r_title1.font.name = 'Calibri'
-    r_title1.font.size = Pt(24)
+    r_title1.font.size = Pt(23)
     r_title1.font.bold = True
     r_title1.font.color.rgb = RGBColor(6, 104, 225) # Meta Blue
 
     p_sub = doc.add_paragraph()
-    p_sub.paragraph_format.space_before = Pt(2)
-    p_sub.paragraph_format.space_after = Pt(14)
+    p_sub.paragraph_format.space_before = Pt(0)
+    p_sub.paragraph_format.space_after = Pt(10)
     r_sub = p_sub.add_run("Dari Butang Klik Hingga Token Kekal & Integrasi AI Agent Melalui MCP: Panduan Praktikal Untuk Orang Bukan Teknikal")
     r_sub.font.name = 'Calibri'
-    r_sub.font.size = Pt(12)
+    r_sub.font.size = Pt(11)
     r_sub.font.italic = True
     r_sub.font.color.rgb = RGBColor(71, 85, 105)
 
@@ -293,13 +293,10 @@ def generate_modul_docx():
     img_path = os.path.join(r"C:\Users\USER\Desktop\modulmetaads", "hero-bg.png")
     if os.path.exists(img_path):
         p_img = doc.add_paragraph()
-        p_img.paragraph_format.space_before = Pt(4)
-        p_img.paragraph_format.space_after = Pt(14)
+        p_img.paragraph_format.space_before = Pt(2)
+        p_img.paragraph_format.space_after = Pt(10)
         p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
         doc.add_picture(img_path, width=Inches(6.6))
-        p_img_after = doc.add_paragraph()
-        p_img_after.paragraph_format.space_before = Pt(2)
-        p_img_after.paragraph_format.space_after = Pt(8)
 
     # Metadata Card Table
     meta_tbl = doc.add_table(rows=2, cols=2)
@@ -316,25 +313,25 @@ def generate_modul_docx():
             cell.width = Inches(3.4)
             set_cell_bg(cell, "F8FAFC")
             set_card_border(cell, "E2E8F0", "6")
-            set_cell_padding(cell, top=100, bottom=100, left=140, right=140)
+            set_cell_padding(cell, top=80, bottom=80, left=120, right=120)
             p = cell.paragraphs[0]
             p.paragraph_format.space_before = Pt(0)
-            p.paragraph_format.space_after = Pt(2)
+            p.paragraph_format.space_after = Pt(0)
             r_k = p.add_run(f"{k}: ")
             r_k.font.bold = True
-            r_k.font.size = Pt(9.5)
+            r_k.font.size = Pt(9)
             r_k.font.color.rgb = RGBColor(100, 116, 139)
             r_v = p.add_run(v)
-            r_v.font.size = Pt(9.5)
+            r_v.font.size = Pt(9)
             r_v.font.color.rgb = RGBColor(30, 41, 59)
 
+    # ==========================================
+    # 2. TABLE OF CONTENTS (PAGE 2)
+    # ==========================================
     doc.add_page_break()
 
-    # ==========================================
-    # 2. TABLE OF CONTENTS (JADUAL KANDUNGAN)
-    # ==========================================
     p_toc_head = doc.add_paragraph()
-    p_toc_head.paragraph_format.space_before = Pt(16)
+    p_toc_head.paragraph_format.space_before = Pt(14)
     p_toc_head.paragraph_format.space_after = Pt(4)
     r_toc_head = p_toc_head.add_run("Jadual Kandungan Modul (Table of Contents)")
     r_toc_head.font.name = 'Calibri'
@@ -344,62 +341,93 @@ def generate_modul_docx():
 
     p_toc_desc = doc.add_paragraph()
     p_toc_desc.paragraph_format.space_before = Pt(0)
-    p_toc_desc.paragraph_format.space_after = Pt(12)
-    r_toc_desc = p_toc_desc.add_run("Disusun secara teratur mengikut turutan pembelajaran industri daripada peringkat asas hingga integrasi sistem pintar:")
+    p_toc_desc.paragraph_format.space_after = Pt(10)
+    r_toc_desc = p_toc_desc.add_run("Setiap bab disusun pada halaman tersendiri dengan rujukan nombor muka surat yang tepat:")
     r_toc_desc.font.size = Pt(10)
     r_toc_desc.font.color.rgb = RGBColor(100, 116, 139)
 
+    # Chapters & explicit page targets (Every chapter starts on fresh page)
     toc_items = [
-        ("Prakata", "Prakata & Panduan Cara Guna Ebook Ini"),
-        ("Bab 1", "Kamus Istilah 'Orang Awam' & Analogi Pejabat Korporat"),
-        ("Bab 2", "Membina Facebook Page & Mencari 'Page ID'"),
-        ("Bab 3", "Menyediakan Meta Business Suite & Akaun Iklan (Ad Account ID)"),
-        ("Bab 4", "Daftar Meta Developer App (Laluan Rasmi API) & App Secret"),
-        ("Bab 5", "System User & Token Akses Kekal (Never-Expiring Access Token)"),
-        ("Bab 6", "Pengujian Endpoint API Menggunakan Graph API Explorer"),
-        ("Bab 7", "Dapatkan Instant Form ID Untuk Kempen Prospek (Lead Generation)"),
-        ("Bab 8", "Susun Semua ID & Token Ke Dalam Fail Tetapan .env"),
-        ("Bab 9", "Integrasi Antigravity & Protokol MCP (Orkestrasi Ejen AI Autonomi)"),
-        ("Bab 10", "Penyelesaian Masalah / Troubleshooting & Jadual Kod Ralat Meta API"),
-        ("Semakan", "Senarai Semak Akhir (Checklist Sebelum Present / Terbit)")
+        ("Prakata", "Prakata & Panduan Cara Guna Ebook Ini", 3),
+        ("Bab 1", "Kamus Istilah 'Orang Awam' & Analogi Pejabat Korporat", 4),
+        ("Bab 2", "Membina Facebook Page & Mencari 'Page ID'", 5),
+        ("Bab 3", "Menyediakan Meta Business Suite & Akaun Iklan (Ad Account ID)", 6),
+        ("Bab 4", "Daftar Meta Developer App (Laluan Rasmi API) & App Secret", 7),
+        ("Bab 5", "System User & Token Akses Kekal (Never-Expiring Access Token)", 8),
+        ("Bab 6", "Pengujian Endpoint API Menggunakan Graph API Explorer", 9),
+        ("Bab 7", "Dapatkan Instant Form ID Untuk Kempen Prospek (Lead Generation)", 10),
+        ("Bab 8", "Susun Semua ID & Token Ke Dalam Fail Tetapan .env", 11),
+        ("Bab 9", "Integrasi Antigravity & Protokol MCP (Orkestrasi Ejen AI Autonomi)", 12),
+        ("Bab 10", "Penyelesaian Masalah / Troubleshooting & Jadual Kod Ralat Meta API", 14),
+        ("Semakan", "Senarai Semak Akhir (Checklist Sebelum Present / Terbit)", 15)
     ]
 
-    toc_tbl = doc.add_table(rows=len(toc_items), cols=2)
+    toc_tbl = doc.add_table(rows=len(toc_items)+1, cols=3)
     toc_tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
-    set_clean_table_borders(toc_tbl, "E2E8F0")
+    set_clean_table_borders(toc_tbl, "CBD5E1")
 
-    for idx, (b_label, b_title) in enumerate(toc_items):
-        cell_lbl = toc_tbl.cell(idx, 0)
-        cell_lbl.width = Inches(1.2)
-        set_cell_padding(cell_lbl, top=70, bottom=70, left=120, right=80)
+    # Header Row
+    th_labels = ["Bahagian / Bab", "Tajuk Kandungan Modul", "Muka Surat"]
+    th_widths = [Inches(1.3), Inches(4.3), Inches(1.3)]
+    for c_i, (h_txt, w) in enumerate(zip(th_labels, th_widths)):
+        cell = toc_tbl.cell(0, c_i)
+        cell.width = w
+        set_cell_bg(cell, "0F172A")
+        set_cell_padding(cell, top=80, bottom=80, left=100, right=100)
+        p = cell.paragraphs[0]
+        if c_i == 2:
+            p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+        r = p.add_run(h_txt)
+        r.font.bold = True
+        r.font.size = Pt(9.5)
+        r.font.color.rgb = RGBColor(255, 255, 255)
+
+    for idx, (b_label, b_title, b_pg) in enumerate(toc_items):
+        cell_lbl = toc_tbl.cell(idx+1, 0)
+        cell_lbl.width = Inches(1.3)
+        set_cell_padding(cell_lbl, top=65, bottom=65, left=100, right=60)
         p0 = cell_lbl.paragraphs[0]
         p0.paragraph_format.space_before = Pt(0)
         p0.paragraph_format.space_after = Pt(0)
         r0 = p0.add_run(b_label)
         r0.font.bold = True
-        r0.font.size = Pt(10)
+        r0.font.size = Pt(9.5)
         r0.font.color.rgb = RGBColor(6, 104, 225)
 
-        cell_title = toc_tbl.cell(idx, 1)
-        cell_title.width = Inches(5.7)
-        set_cell_padding(cell_title, top=70, bottom=70, left=80, right=120)
+        cell_title = toc_tbl.cell(idx+1, 1)
+        cell_title.width = Inches(4.3)
+        set_cell_padding(cell_title, top=65, bottom=65, left=60, right=80)
         p1 = cell_title.paragraphs[0]
         p1.paragraph_format.space_before = Pt(0)
         p1.paragraph_format.space_after = Pt(0)
         r1 = p1.add_run(b_title)
-        r1.font.size = Pt(10)
+        r1.font.size = Pt(9.5)
         r1.font.color.rgb = RGBColor(30, 41, 59)
+
+        cell_pg = toc_tbl.cell(idx+1, 2)
+        cell_pg.width = Inches(1.3)
+        set_cell_padding(cell_pg, top=65, bottom=65, left=60, right=100)
+        p2 = cell_pg.paragraphs[0]
+        p2.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+        p2.paragraph_format.space_before = Pt(0)
+        p2.paragraph_format.space_after = Pt(0)
+        r2 = p2.add_run(f"Halaman {b_pg}")
+        r2.font.bold = True
+        r2.font.size = Pt(9.5)
+        r2.font.color.rgb = RGBColor(71, 85, 105)
+
         if idx % 2 == 1:
             set_cell_bg(cell_lbl, "F8FAFC")
             set_cell_bg(cell_title, "F8FAFC")
+            set_cell_bg(cell_pg, "F8FAFC")
 
+    # ==========================================
+    # 3. PRAKATA (PAGE 3)
+    # ==========================================
     doc.add_page_break()
 
-    # ==========================================
-    # 3. PRAKATA & CARA GUNA EBOOK
-    # ==========================================
     p_pk = doc.add_paragraph()
-    p_pk.paragraph_format.space_before = Pt(16)
+    p_pk.paragraph_format.space_before = Pt(12)
     p_pk.paragraph_format.space_after = Pt(8)
     r_pk = p_pk.add_run("Prakata & Cara Guna Ebook Ini")
     r_pk.font.name = 'Calibri'
@@ -420,14 +448,15 @@ def generate_modul_docx():
     ], title="MENGAPA MODUL INI DIBINA?", border_color="0668E1", bg_color="EFF6FF", title_color=RGBColor(6, 104, 225))
 
     # ==========================================
-    # 4. BAB 1: KAMUS ISTILAH
+    # 4. BAB 1: KAMUS ISTILAH (PAGE 4)
     # ==========================================
+    doc.add_page_break()
     add_chapter_title("1", "Kamus Istilah 'Orang Awam' & Analogi Pejabat")
     
     p_b1_desc = doc.add_paragraph()
     p_b1_desc.paragraph_format.space_after = Pt(8)
     r = p_b1_desc.add_run("Sebelum kita menekan sebarang butang tetapan di portal Meta, fahami terlebih dahulu istilah penting ini dengan Analogi Pejabat Korporat:")
-    r.font.size = Pt(10.5)
+    r.font.size = Pt(10)
     r.font.color.rgb = RGBColor(51, 65, 85)
 
     b1_headers = ["Istilah Teknikal", "Maksud Sebenar", "Analogi Mudah", "Di Mana Anda Jumpa?"]
@@ -452,13 +481,11 @@ def generate_modul_docx():
     for c_i, h in enumerate(b1_headers):
         cell = t1.cell(0, c_i)
         set_cell_bg(cell, "0F172A")
-        set_cell_padding(cell, top=100, bottom=100, left=120, right=120)
+        set_cell_padding(cell, top=80, bottom=80, left=100, right=100)
         p = cell.paragraphs[0]
-        p.paragraph_format.space_before = Pt(0)
-        p.paragraph_format.space_after = Pt(0)
         r = p.add_run(h)
         r.font.bold = True
-        r.font.size = Pt(9.5)
+        r.font.size = Pt(9)
         r.font.color.rgb = RGBColor(255, 255, 255)
 
     # Data Rows
@@ -467,12 +494,10 @@ def generate_modul_docx():
             cell = t1.cell(r_i+1, c_i)
             if (r_i % 2) == 1:
                 set_cell_bg(cell, "F8FAFC")
-            set_cell_padding(cell, top=80, bottom=80, left=120, right=120)
+            set_cell_padding(cell, top=60, bottom=60, left=100, right=100)
             p = cell.paragraphs[0]
-            p.paragraph_format.space_before = Pt(0)
-            p.paragraph_format.space_after = Pt(0)
             r = p.add_run(val)
-            r.font.size = Pt(9)
+            r.font.size = Pt(8.5)
             if c_i == 0:
                 r.font.bold = True
                 r.font.color.rgb = RGBColor(6, 104, 225)
@@ -480,14 +505,15 @@ def generate_modul_docx():
                 r.font.color.rgb = RGBColor(16, 185, 129)
             elif c_i == 3:
                 r.font.name = 'Consolas'
-                r.font.size = Pt(8.5)
+                r.font.size = Pt(8)
                 r.font.color.rgb = RGBColor(71, 85, 105)
             else:
                 r.font.color.rgb = RGBColor(51, 65, 85)
 
     # ==========================================
-    # 5. BAB 2: FACEBOOK PAGE & PAGE ID
+    # 5. BAB 2: FACEBOOK PAGE & PAGE ID (PAGE 5)
     # ==========================================
+    doc.add_page_break()
     add_chapter_title("2", "Membina Facebook Page & Mencari 'Page ID'")
     
     add_subheading("Langkah 2.1: Bina Facebook Page (Jika Belum Ada)")
@@ -517,8 +543,9 @@ def generate_modul_docx():
     ], title="TINDAKAN ANDA", border_color="8B5CF6", bg_color="F5F3FF", title_color=RGBColor(124, 58, 237))
 
     # ==========================================
-    # 6. BAB 3: META BUSINESS SUITE & AKAUN IKLAN
+    # 6. BAB 3: META BUSINESS SUITE & AKAUN IKLAN (PAGE 6)
     # ==========================================
+    doc.add_page_break()
     add_chapter_title("3", "Menyediakan Meta Business Suite & Akaun Iklan")
 
     add_subheading("Langkah 3.1: Buka Meta Business Suite")
@@ -544,8 +571,9 @@ def generate_modul_docx():
     ], title="NOTA PENTING", border_color="0668E1", bg_color="F0F7FF", title_color=RGBColor(6, 104, 225))
 
     # ==========================================
-    # 7. BAB 4: DAFTAR DEVELOPER APP
+    # 7. BAB 4: DAFTAR DEVELOPER APP (PAGE 7)
     # ==========================================
+    doc.add_page_break()
     add_chapter_title("4", "Daftar Meta Developer App (Laluan Rasmi API)")
     
     p4_desc = doc.add_paragraph()
@@ -583,8 +611,9 @@ def generate_modul_docx():
     ], title="AMARAN KESELAMATAN", border_color="EF4444", bg_color="FEF2F2", title_color=RGBColor(220, 38, 38))
 
     # ==========================================
-    # 8. BAB 5: SYSTEM USER & TOKEN AKSES KEKAL
+    # 8. BAB 5: SYSTEM USER & TOKEN AKSES KEKAL (PAGE 8)
     # ==========================================
+    doc.add_page_break()
     add_chapter_title("5", "System User & Token Akses Kekal (The Holy Grail)")
 
     add_callout([
@@ -618,14 +647,8 @@ def generate_modul_docx():
                  "2. Select App: Pilih nama aplikasi yang didaftarkan dalam Bab 4.\n"
                  "3. Token Expiration: Pilih pilihan 'Never'.\n"
                  "4. Tandakan kebenaran (Permissions) berikut (Sangat Kritikal):\n"
-                 "   • pages_show_list\n"
-                 "   • pages_read_engagement\n"
-                 "   • pages_manage_posts\n"
-                 "   • pages_manage_engagement\n"
-                 "   • ads_management\n"
-                 "   • ads_read\n"
-                 "   • leads_retrieval\n"
-                 "   • pages_manage_ads\n"
+                 "   • pages_show_list, pages_read_engagement, pages_manage_posts, pages_manage_engagement\n"
+                 "   • ads_management, ads_read, leads_retrieval, pages_manage_ads\n"
                  "5. Klik butang Generate Token.\n"
                  "6. Salin kod panjang yang bermula dengan huruf 'EAA...' dan simpan serta-merta sebagai META_SYSTEM_USER_TOKEN.")
 
@@ -634,8 +657,9 @@ def generate_modul_docx():
     ], title="SIMPAN SERTA-MERTA", border_color="F59E0B", bg_color="FFFBEB", title_color=RGBColor(217, 119, 6))
 
     # ==========================================
-    # 9. BAB 6: UJI TOKEN (API EXPLORER)
+    # 9. BAB 6: UJI TOKEN (API EXPLORER) (PAGE 9)
     # ==========================================
+    doc.add_page_break()
     add_chapter_title("6", "Pengujian Endpoint API Menggunakan Graph API Explorer")
     
     p6_desc = doc.add_paragraph()
@@ -658,8 +682,9 @@ def generate_modul_docx():
     add_code_block('{\n  "name": "Demo_SME_Automation",\n  "id": "1122334455667788"\n}', title="RESPON JSON (STATUS: 200 OK)")
 
     # ==========================================
-    # 10. BAB 7: INSTANT FORM ID
+    # 10. BAB 7: INSTANT FORM ID (PAGE 10)
     # ==========================================
+    doc.add_page_break()
     add_chapter_title("7", "Dapatkan Instant Form ID Untuk Kempen Prospek")
 
     p7_desc = doc.add_paragraph()
@@ -682,8 +707,9 @@ def generate_modul_docx():
     ], title="TINDAKAN ANDA", border_color="0668E1", bg_color="F0F7FF", title_color=RGBColor(6, 104, 225))
 
     # ==========================================
-    # 11. BAB 8: SUSUN FAIL .ENV
+    # 11. BAB 8: SUSUN FAIL .ENV (PAGE 11)
     # ==========================================
+    doc.add_page_break()
     add_chapter_title("8", "Susun Semua ID & Token Ke Dalam Fail .env")
 
     p8_desc = doc.add_paragraph()
@@ -714,8 +740,9 @@ def generate_modul_docx():
     add_code_block(env_content, title="TEMPLAT FAIL .env")
 
     # ==========================================
-    # 12. BAB 9: INTEGRASI AI AGENT & MCP
+    # 12. BAB 9: INTEGRASI AI AGENT & MCP (PAGE 12 - 13)
     # ==========================================
+    doc.add_page_break()
     add_chapter_title("9", "Integrasi Antigravity & MCP (AI Agent Autonomi)")
 
     p9_desc = doc.add_paragraph()
@@ -765,10 +792,6 @@ def generate_modul_docx():
         p_r = cell_r.paragraphs[0]
         p_r.add_run(f"• {c_new}").font.size = Pt(9)
 
-    p_sp = doc.add_paragraph()
-    p_sp.paragraph_format.space_before = Pt(4)
-    p_sp.paragraph_format.space_after = Pt(4)
-
     add_subheading("9.2 Empat Objektif Utama & Jangkaan Hasil")
     p9_objs = doc.add_paragraph()
     p9_objs.paragraph_format.space_after = Pt(6)
@@ -778,6 +801,9 @@ def generate_modul_docx():
         "3. Kawalan Bajet (Hard-Lock Safety): Ejen AI menyemak baki menggunakan 'meta_get_ad_account_details' dan menghalang sebarang bajet melebihi siling (cth: RM15/hari) tanpa kelulusan manusia.\n"
         "4. Diagnosis Ralat (Self-Healing): Sekiranya iklan ditolak (Ad Rejected), AI mentafsir kod ralat rasmi Meta dan membetulkan salinan iklan mengikut dasar pengiklanan secara automatik."
     )
+
+    # Page break to let Architecture & Dialog start cleanly on Page 13
+    doc.add_page_break()
 
     add_subheading("9.3 Kitaran Autonomi Latar Belakang (System Architecture)")
     arch_diagram = (
@@ -821,8 +847,9 @@ def generate_modul_docx():
     ], title="SIMULASI PERBUALAN EJEN PINTAR", border_color="10B981", bg_color="ECFDF5", title_color=RGBColor(5, 150, 105))
 
     # ==========================================
-    # 13. BAB 10: TROUBLESHOOTING & ERROR CODES
+    # 13. BAB 10: TROUBLESHOOTING & ERROR CODES (PAGE 14)
     # ==========================================
+    doc.add_page_break()
     add_chapter_title("10", "Penyelesaian Masalah (Error Troubleshooting)")
 
     p10_desc = doc.add_paragraph()
@@ -845,11 +872,11 @@ def generate_modul_docx():
     for c_i, h in enumerate(err_headers):
         cell = t_err.cell(0, c_i)
         set_cell_bg(cell, "7F1D1D") # Dark Red
-        set_cell_padding(cell, top=100, bottom=100, left=120, right=120)
+        set_cell_padding(cell, top=80, bottom=80, left=100, right=100)
         p = cell.paragraphs[0]
         r = p.add_run(h)
         r.font.bold = True
-        r.font.size = Pt(9.5)
+        r.font.size = Pt(9)
         r.font.color.rgb = RGBColor(255, 255, 255)
 
     for r_i, row in enumerate(err_data):
@@ -857,10 +884,10 @@ def generate_modul_docx():
             cell = t_err.cell(r_i+1, c_i)
             if (r_i % 2) == 1:
                 set_cell_bg(cell, "FEF2F2")
-            set_cell_padding(cell, top=80, bottom=80, left=120, right=120)
+            set_cell_padding(cell, top=65, bottom=65, left=100, right=100)
             p = cell.paragraphs[0]
             r = p.add_run(val)
-            r.font.size = Pt(9)
+            r.font.size = Pt(8.5)
             if c_i == 0:
                 r.font.bold = True
                 r.font.name = 'Consolas'
@@ -872,10 +899,12 @@ def generate_modul_docx():
                 r.font.color.rgb = RGBColor(51, 65, 85)
 
     # ==========================================
-    # 14. SENARAI SEMAK AKHIR (CHECKLIST)
+    # 14. SENARAI SEMAK AKHIR (CHECKLIST) (PAGE 15)
     # ==========================================
+    doc.add_page_break()
+
     p_ck_h = doc.add_paragraph()
-    p_ck_h.paragraph_format.space_before = Pt(22)
+    p_ck_h.paragraph_format.space_before = Pt(14)
     p_ck_h.paragraph_format.space_after = Pt(4)
     r_ck_h = p_ck_h.add_run("Senarai Semak Akhir (Final Checklist)")
     r_ck_h.font.name = 'Calibri'
@@ -916,7 +945,7 @@ def generate_modul_docx():
         set_cell_padding(c1, top=70, bottom=70, left=60, right=100)
         p1 = c1.paragraphs[0]
         r1 = p1.add_run(f"{idx+1}. {item_txt}")
-        r1.font.size = Pt(10)
+        r1.font.size = Pt(9.5)
         r1.font.color.rgb = RGBColor(30, 41, 59)
         if idx % 2 == 1:
             set_cell_bg(c0, "F8FAFC")
@@ -924,11 +953,11 @@ def generate_modul_docx():
 
     # Final Closing Footer Note
     p_close = doc.add_paragraph()
-    p_close.paragraph_format.space_before = Pt(30)
+    p_close.paragraph_format.space_before = Pt(24)
     p_close.paragraph_format.space_after = Pt(4)
     p_close.alignment = WD_ALIGN_PARAGRAPH.CENTER
     r_close = p_close.add_run("Modul Ebook ini dibangunkan secara rasmi oleh Pasukan Orkestrasi Ejen AI DFK INC / Muhammad Syahmi (syahmiaof).")
-    r_close.font.size = Pt(9.5)
+    r_close.font.size = Pt(9)
     r_close.font.italic = True
     r_close.font.color.rgb = RGBColor(100, 116, 139)
 
