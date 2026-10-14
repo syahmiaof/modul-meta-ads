@@ -16,22 +16,100 @@ def generate_modul_docx():
         section.left_margin = Inches(0.8)
         section.right_margin = Inches(0.8)
         
-        # Header / Footer
+        # Differentiate first page (cover page has no header/footer)
+        section.different_first_page_header_footer = True
+        
+        # Subsequent pages header
         header = section.header
         p_hd = header.paragraphs[0]
         p_hd.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-        p_hd.text = "Modul Ebook: Meta Ads & AI Agent Automation"
+        p_hd.text = "Modul Ebook Lengkap: Meta Ads & AI Agent Automation"
         p_hd.runs[0].font.name = 'Calibri'
         p_hd.runs[0].font.size = Pt(8.5)
         p_hd.runs[0].font.color.rgb = RGBColor(148, 163, 184)
         
+        # Subsequent pages footer with 2-column table: Title left, Page numbers right
         footer = section.footer
-        p_ft = footer.paragraphs[0]
-        p_ft.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-        p_ft.text = "syahmiaof.my | Pasukan Orkestrasi Ejen AI DFK INC"
-        p_ft.runs[0].font.name = 'Calibri'
-        p_ft.runs[0].font.size = Pt(8.5)
-        p_ft.runs[0].font.color.rgb = RGBColor(148, 163, 184)
+        p_ft_old = footer.paragraphs[0]
+        p_ft_old.text = "" # clear default text
+        
+        ft_tbl = footer.add_table(rows=1, cols=2, width=Inches(6.9))
+        ft_tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
+        
+        # Subtle top border line above footer
+        ft_tblPr = ft_tbl._tbl.tblPr
+        ft_borders = parse_xml(f'''
+            <w:tblBorders {nsdecls("w")}>
+                <w:top w:val="single" w:sz="4" w:space="0" w:color="E2E8F0"/>
+                <w:left w:val="none"/>
+                <w:bottom w:val="none"/>
+                <w:right w:val="none"/>
+                <w:insideH w:val="none"/>
+                <w:insideV w:val="none"/>
+            </w:tblBorders>
+        ''')
+        ft_tblPr.append(ft_borders)
+        
+        # Left cell: Title & Author
+        c_left = ft_tbl.cell(0, 0)
+        c_left.width = Inches(4.5)
+        p_l = c_left.paragraphs[0]
+        p_l.paragraph_format.space_before = Pt(4)
+        p_l.paragraph_format.space_after = Pt(0)
+        r_l = p_l.add_run("Modul Meta Ads & AI Agent Automation | Muhammad Syahmi (syahmiaof)")
+        r_l.font.name = 'Calibri'
+        r_l.font.size = Pt(8.5)
+        r_l.font.color.rgb = RGBColor(148, 163, 184)
+        
+        # Right cell: Dynamic Page Numbering (Muka Surat X daripada Y)
+        c_right = ft_tbl.cell(0, 1)
+        c_right.width = Inches(2.4)
+        p_r = c_right.paragraphs[0]
+        p_r.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+        p_r.paragraph_format.space_before = Pt(4)
+        p_r.paragraph_format.space_after = Pt(0)
+        
+        r_pg1 = p_r.add_run("Muka Surat ")
+        r_pg1.font.name = 'Calibri'
+        r_pg1.font.size = Pt(8.5)
+        r_pg1.font.color.rgb = RGBColor(148, 163, 184)
+        
+        # Add PAGE field
+        run_fld_pg = p_r.add_run()
+        fld_pg_1 = parse_xml(r'<w:fldChar %s w:fldCharType="begin"/>' % nsdecls('w'))
+        fld_pg_instr = parse_xml(r'<w:instrText %s xml:space="preserve"> PAGE </w:instrText>' % nsdecls('w'))
+        fld_pg_sep = parse_xml(r'<w:fldChar %s w:fldCharType="separate"/>' % nsdecls('w'))
+        fld_pg_t = parse_xml(r'<w:t %s>1</w:t>' % nsdecls('w'))
+        fld_pg_end = parse_xml(r'<w:fldChar %s w:fldCharType="end"/>' % nsdecls('w'))
+        run_fld_pg._r.append(fld_pg_1)
+        run_fld_pg._r.append(fld_pg_instr)
+        run_fld_pg._r.append(fld_pg_sep)
+        run_fld_pg._r.append(fld_pg_t)
+        run_fld_pg._r.append(fld_pg_end)
+        run_fld_pg.font.name = 'Calibri'
+        run_fld_pg.font.size = Pt(8.5)
+        run_fld_pg.font.color.rgb = RGBColor(148, 163, 184)
+        
+        r_pg2 = p_r.add_run(" daripada ")
+        r_pg2.font.name = 'Calibri'
+        r_pg2.font.size = Pt(8.5)
+        r_pg2.font.color.rgb = RGBColor(148, 163, 184)
+        
+        # Add NUMPAGES field
+        run_fld_np = p_r.add_run()
+        fld_np_1 = parse_xml(r'<w:fldChar %s w:fldCharType="begin"/>' % nsdecls('w'))
+        fld_np_instr = parse_xml(r'<w:instrText %s xml:space="preserve"> NUMPAGES </w:instrText>' % nsdecls('w'))
+        fld_np_sep = parse_xml(r'<w:fldChar %s w:fldCharType="separate"/>' % nsdecls('w'))
+        fld_np_t = parse_xml(r'<w:t %s>1</w:t>' % nsdecls('w'))
+        fld_np_end = parse_xml(r'<w:fldChar %s w:fldCharType="end"/>' % nsdecls('w'))
+        run_fld_np._r.append(fld_np_1)
+        run_fld_np._r.append(fld_np_instr)
+        run_fld_np._r.append(fld_np_sep)
+        run_fld_np._r.append(fld_np_t)
+        run_fld_np._r.append(fld_np_end)
+        run_fld_np.font.name = 'Calibri'
+        run_fld_np.font.size = Pt(8.5)
+        run_fld_np.font.color.rgb = RGBColor(148, 163, 184)
 
     # Style Helpers
     def set_cell_bg(cell, fill_hex):
