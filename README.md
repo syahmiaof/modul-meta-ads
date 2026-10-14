@@ -3,6 +3,7 @@
   <p><strong>Dari Butang Klik Hingga Token Kekal & Integrasi AI Agent Melalui MCP: Panduan Praktikal Untuk Orang Bukan Teknikal.</strong></p>
   <p>
     <a href="https://modul-meta-ads.syahmiaof.my">Live Module</a> · 
+    <a href="https://docs.google.com/document/d/1gHJIwCtgYeH_Xh3beylTA--BeACOtN8WJsoleqB8S-w/edit">Google Docs Edition</a> · 
     <a href="https://syahmiaof.my">Portfolio</a> · 
     <a href="https://modulmetaads.vercel.app">Vercel Mirror</a>
   </p>
