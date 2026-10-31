@@ -1,11 +1,12 @@
 <div align="center">
   <h1>MODUL META ADS & AI AGENT AUTOMATION</h1>
-  <p><strong>Dari Butang Klik Hingga Token Kekal & Integrasi AI Agent Melalui MCP: Panduan Praktikal Untuk Orang Bukan Teknikal.</strong></p>
+  <p><strong>Dari Butang Klik Hingga Token Kekal & Integrasi AI Agent Melalui MCP: Panduan Praktikal Untuk Orang Bukan Teknikal</strong></p>
   <p>
-    <a href="https://modul-meta-ads.syahmiaof.my">Live Module</a> · 
-    <a href="https://docs.google.com/document/d/1gHJIwCtgYeH_Xh3beylTA--BeACOtN8WJsoleqB8S-w/edit">Google Docs Edition</a> · 
-    <a href="https://syahmiaof.my">Portfolio</a> · 
-    <a href="https://modulmetaads.vercel.app">Vercel Mirror</a>
+    <a href="https://modul-meta-ads.syahmiaof.my"><img src="https://img.shields.io/badge/Demo-Live-60E1B5?style=for-the-badge&logoColor=60E1B5&labelColor=101713" alt="Demo"></a>
+    <a href="https://github.com/syahmiaof/modul-meta-ads"><img src="https://img.shields.io/badge/Source-GitHub-60E1B5?style=for-the-badge&logo=github&logoColor=60E1B5&labelColor=101713" alt="GitHub"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-60E1B5?style=for-the-badge&logoColor=60E1B5&labelColor=101713" alt="License"></a>
+    <a href="https://docs.google.com/document/d/1gHJIwCtgYeH_Xh3beylTA--BeACOtN8WJsoleqB8S-w/edit"><img src="https://img.shields.io/badge/Docs-Google_Doc-60E1B5?style=for-the-badge&logo=googledocs&logoColor=60E1B5&labelColor=101713" alt="Google Docs"></a>
+    <a href="https://syahmiaof.my"><img src="https://img.shields.io/badge/Portfolio-syahmiaof.my-60E1B5?style=for-the-badge&logo=vercel&logoColor=60E1B5&labelColor=101713" alt="Portfolio"></a>
   </p>
 </div>
 
@@ -15,9 +16,15 @@
 
 ## Workflow & System Architecture
 
-~~~text
-Facebook Page & Business Portfolio → Meta Developer App & Graph API Explorer → System User (Admin) → Never-Expiring Token (EAA...) → Environment Config (.env) → Antigravity AI Agent + MCP Tool → Autonomous Campaign & Lead Intelligence
-~~~
+```text
+Facebook Page & Business Portfolio
+  → Meta Developer App & Graph API Explorer
+  → System User (Admin)
+  → Never-Expiring Token (EAA...)
+  → Environment Config (.env)
+  → Antigravity AI Agent + MCP Tool
+  → Autonomous Campaign & Lead Intelligence
+```
 
 Modul ini disusun rapi merangkumi 10 bab utama berserta senarai semak:
 
@@ -33,6 +40,26 @@ Modul ini disusun rapi merangkumi 10 bab utama berserta senarai semak:
 - **10 / Penyelesaian Masalah / Troubleshooting (`#bab10`)** — Jadual diagnostik kod ralat lazim Meta API (Error 190, 100, 200, 17, Timeout) berserta langkah pemulihan segera.
 - **Senarai Semak Akhir (`#checklist`)** — Senarai semak interaktif sebelum pembentangan, penyerahan tugasan, atau pelancaran kempen sebenar.
 
+## Automated Verification
+
+Validasi integriti struktur modul dijalankan melalui CI GitHub Actions:
+
+```bash
+# Uji kewujudan dan kesahihan dokumen modul
+npm test
+```
+
+## License
+
+Dilesenkan di bawah [MIT License](LICENSE) &copy; 2026 Muhammad Syahmi.
+
 ## Builder
 
-[Muhammad Syahmi](https://syahmiaof.my) · [GitHub](https://github.com/syahmiaof) · [Email](mailto:syahmiaof123@gmail.com)
+<div align="center">
+  <p><strong>Muhammad Syahmi (syahmiaof)</strong></p>
+  <p>
+    <a href="https://syahmiaof.my"><img src="https://img.shields.io/badge/PORTFOLIO-101713?style=for-the-badge&logo=vercel&logoColor=60E1B5" alt="Portfolio" /></a>
+    <a href="https://github.com/syahmiaof"><img src="https://img.shields.io/badge/GITHUB-101713?style=for-the-badge&logo=github&logoColor=60E1B5" alt="GitHub" /></a>
+    <a href="mailto:syahmiaof123@gmail.com"><img src="https://img.shields.io/badge/EMAIL-101713?style=for-the-badge&logo=gmail&logoColor=60E1B5" alt="Email" /></a>
+  </p>
+</div>

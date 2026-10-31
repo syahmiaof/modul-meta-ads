@@ -1,0 +1,20 @@
+{
+  "name": "modul-meta-ads",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Panduan Praktikal Meta Ads & Integrasi AI Agent Melalui Model Context Protocol (MCP)",
+  "scripts": {
+    "validate": "node -e \"const fs=require('fs'); ['index.html', 'e_book_modul_meta_ads_mcp.html'].forEach(f => { if(!fs.existsSync(f)) throw new Error('Missing '+f); console.log('Validated: ' + f); });\"",
+    "test": "npm run validate"
+  },
+  "keywords": [
+    "meta-ads",
+    "facebook-marketing-api",
+    "mcp",
+    "ai-agent",
+    "automation",
+    "tutorial"
+  ],
+  "author": "Muhammad Syahmi (syahmiaof)",
+  "license": "MIT"
+}

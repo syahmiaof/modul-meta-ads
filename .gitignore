@@ -1,8 +1,30 @@
+# Environments & local build
 .vercel
 node_modules
 .env
+*.log
+*.tmp
 .DS_Store
 Thumbs.db
 __pycache__/
 
-.vercel
+# Archive & temporary bundles
+*.zip
+*.tar.gz
+
+# Machine provisioning scripts
+audit_remote_laptop.py
+check_*.py
+diagnose_*.py
+fix_antigravity*.py
+install_*.py
+make_shortcuts.py
+run_phase2_installation.py
+sync_*.py
+test_remote_winget.py
+
+# Presentations & previews (untracked working artifacts)
+slide_previews/
+*.pptx
+build_powerpoint_morph.py
+inject_morph.py
